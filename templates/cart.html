@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Cart{% endblock %}
+{% block main %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<section class="cart">
+  <h1 class="item-heading">
+    Cart
+  </h1>
+  <p class="item-heading" id="new"></p>
+  <ul class="items">
+    {% if current_user.is_authenticated %}
+      {% for cart in cart_items %}
+        <li class="column">
+          <p>
+            <img src="{{cart.item.image_path}}" alt="{{cart.item.name}}">
+            <br>
+            {{cart.item.name}}
+            <br>
+            ${{cart.item.price}}
+            <br>
+            In Stock: {{cart.item.in_stock}}
+            <br>
+            {% if cart.item.description %}
+              {{cart.item.description}}
+              <br>
+            {% endif %}
+            <input type="number" name="{{cart.item.name}}" id="{{cart.item.id}}" value="{{cart.amount_to_buy}}">
+            <button onclick="addToCart('{{cart.item.id}}')">Update</button>
+          </p>
+        </li>
+      {% endfor %}
+    {% else %}
+      {% for item in cart_items %}
+        <li class="column">
+          <p>
+            <img src="{{item[0].image_path}}" alt="{{item[0].name}}">
+            <br>
+            {{item[0].name}}
+            <br>
+            ${{item[0].price}}
+            <br>
+            In Stock: {{item[0].in_stock}}
+            <br>
+            {% if item[0].description %}
+              {{item[0].description}}
+              <br>
+            {% endif %}
+            <input type="number" name="{{item[0].name}}" id="{{item[0].id}}" value="{{item[1]}}">
+            <button onclick='addToCart(`{{item[0].id}}`, `{{cart_ids | tojson}}`)'>Update</button>
+          </p>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+  <button>CASH OUT</button>
+</section>
+{% endblock %}

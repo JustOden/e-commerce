@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Update Item{% endblock %}
+{% block main %}
+    <div class="update-item form">
+        <form action="#" method="post" enctype=multipart/form-data>
+            {{form.hidden_tag()}}
+            {{form.image()}} <br>
+            {{form.name(placeholder=form.name.label.text)}} <br>
+            {{form.price(placeholder=form.price.label.text)}} <br>
+            {{form.in_stock(placeholder=form.in_stock.label.text)}} <br>
+            {{form.description(placeholder=form.description.label.text)}} <br>
+            {{form.submit()}} <br>
+        </form>
+        <a href="/add_item">Add Items</a> <br>
+        <a href="/delete_item">Delete Items</a> <br>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+{% endblock %}
+    
+    

@@ -1,0 +1,155 @@
+/* General  */
+body {
+    background-image: url('../assets/graphics/resized-bg-3.jpg');
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    /* Font */
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 24px;
+
+    padding-top: 80px;
+}
+
+#page-container {
+    position: relative;
+    min-height: 90.5vh;
+}
+
+#content-wrap {
+    padding-bottom: 5.5rem;    /* Footer height */
+}
+
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 5.5rem;            /* Footer height */
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.navbar-text {
+    color: rgb(255, 255, 255) !important;
+    padding-right: 5px;
+}
+
+.flash_messages {
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+}
+
+/* Hero Section */
+#hero {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 48%;
+    padding-left: 3.5%;
+    padding-right: 3.5%;
+}
+
+.image img {
+    width: 100%;
+    height: 100%;
+}
+
+#hero .image {
+    width: 48%;
+    padding-right: 3.5%;
+}
+
+#hero .buttons {
+    display: flex;
+}
+
+#hero .button {
+    padding-right: 5%;
+}
+
+#hero .column {
+    margin: 10px;
+}
+
+.company-name {
+    color: aquamarine;
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.500);
+}
+
+/* About Us Section */
+#about-us {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-around;
+    flex-direction: row-reverse;
+    padding: 20px;
+}
+
+#about-us .heading {
+    padding-left: 0%;
+}
+
+#about-us .column {
+    margin: 10px;
+}
+
+#about-us .image {
+    width: 48%;
+    padding-left: 3.5%;
+    padding-right: 3.5%;
+}
+
+/* Items Section  */
+#shop, .cart {
+    text-align: center;
+}
+
+.items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    padding: 20px;
+}
+
+.items .column {
+    border: 1px solid;
+    height: 50%;
+    width: 25%;
+    margin: 10px;
+}
+
+.items li img {
+    width: 100%;
+    height: 100%;
+}
+
+.items input[type=number] {
+    width: 50px;
+}
+
+/* Form Section */
+.form {
+    text-align: center;
+}

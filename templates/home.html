@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block main %}
+<section id="hero">
+  <div class="heading column">
+    <h1>
+      Welcome to <span class="company-name">Wellnessify</span>
+    </h1>
+    <p>
+      <strong>Innovation, Productivity, Health and Motivation.</strong><br>
+      Welcome to the hub{{" " + current_user.name + "!" if current_user.name else "!"}} <strong>Join us in our journey to promote health, focus and productivity!</strong> We provide healthy supplements to elevate your well-being and to help you get back on track and focus on with important duties; cheap of cost! <em>Help spread the word!</em> Create an Account for easy shopping and browsing.
+    </p>
+    <div class="buttons">
+      {% if current_user.is_authenticated %}
+        <div class="button">
+          <a href="/dashboard"><button>Dashboard</button></a>
+        </div>
+      {% else %}
+        <div class="button">
+          <a href="/register"><button>Register</button></a>
+        </div>
+        <div class="button">
+          <a href="/login"><button>Log In</button></a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="image column">
+    <img src="static\assets\graphics\tech-companies.jpg" alt="Girl with VR headset">
+  </div>
+</section>
+
+<section id="shop">
+  <ul class="items">
+    {% for item in all_items %}
+      <li class="column">
+        <p>
+          <img src="{{item.image_path}}" alt="{{item.name}}" title="{{item.description if item.description}}">
+          <br>
+          {{item.name}}
+          <br>
+          ${{item.price}}
+          <br>
+          In Stock: {{item.in_stock}}
+          <br>
+          <input type="number" name="{{item.name}}" id="{{item.id}}" value="0" required>
+          {% if current_user.is_authenticated %}
+            <button onclick='addToCart(`{{item.id}}`)'>Add to Cart</button>
+          {% else %}
+            <button onclick='addToCart(`{{item.id}}`, `{{cart_items | tojson}}`)'>Add to Cart</button>
+          {% endif %}
+          
+        </p>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section id="about-us">
+  <div class="heading column">
+    <h1>
+      About Us
+    </h1>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem quisquam labore voluptatem tenetur laborum corporis, velit quaerat explicabo ipsa at ipsam quo nobis? Cumque, magnam repellat! Omnis fuga voluptas dignissimos?
+    </p>
+  </div>
+  <div class="image column">
+    <img src="static\assets\graphics\about-us.jpg" alt="about-us">
+  </div>
+</section>
+{% endblock %}

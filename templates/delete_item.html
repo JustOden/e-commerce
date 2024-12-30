@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Delete Item{% endblock %}
+{% block main %}
+    <div class="delete-item form">
+        <form action="#" method="post">
+            {{form.hidden_tag()}}
+            {{form.name(placeholder=form.name.label.text)}} <br>
+            {{form.submit()}} <br>
+        </form>
+        <a href="/add_item">Add Items</a> <br>
+        <a href="/update_item">Update Items</a> <br>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    
+{% endblock %}

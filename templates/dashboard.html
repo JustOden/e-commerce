@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}{{current_user.name}}{% endblock %}
+{% block main %}
+
+    <div class="form">
+        <h1>Welcome to your user page {{current_user.name}}!</h1>
+        {% if current_user.image_path %}
+            <img src="{{current_user.image_path}}" width="100" height="100" alt="{{current_user.image_name}}">
+        {% endif %}
+        {% if current_user.is_admin %}
+            <p>You are an admin</p>
+            <a href="/remove-admin">Click to remove admin</a>
+        {% else %}
+            <p>You are not admin</p>
+            <a href="/set-admin">Click to become admin</a>
+        {% endif %}
+        <div class="user-edit">
+            <form action="#" method="post" enctype="multipart/form-data">
+                <p>Add profile picture</p>
+                {{form.hidden_tag()}}
+                {{form.image()}} <br>
+                {{form.name(placeholder=form.name.label.text)}} <br>
+                {{form.email(placeholder=form.email.label.text)}} <br>
+                {{form.submit()}} <br>
+                <hr>
+            </form>
+            <p>Change your password</p>
+            <form action="#" method="post">
+                {{form.hidden_tag()}}
+                {{form.old_pw(placeholder=form.old_pw.label.text)}} <br>
+                {{form.new_pw(placeholder=form.new_pw.label.text)}} <br>
+                {{form.confirm(placeholder=form.confirm.label.text)}} <br>
+                {{form.submit(id="change", value="Change")}} <br>
+            </form>
+        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+{% endblock %}
