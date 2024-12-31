@@ -227,7 +227,7 @@ def login():
             flash("Password or Email is incorrect")
     if current_user.is_authenticated:
         flash("Already Logged In!")
-        return redirect(url_for("user"))
+        return redirect(url_for("dashboard"))
     else:
         return render_template("login.html", form=form)
 
