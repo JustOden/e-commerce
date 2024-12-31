@@ -26,7 +26,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
-
+# does this work?
 def main():
     with app.app_context():
         db.create_all()
