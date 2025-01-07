@@ -38,6 +38,7 @@ def load_user(user_id):
     return db.session.get(Users, user_id)
 
 
+# testing commits
 def allowed_file(filename):
     return "." in filename and \
            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
