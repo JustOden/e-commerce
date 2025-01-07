@@ -1,20 +1,30 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
 {% block main %}
-    <div class="register form">
-        <h1>Create an Account!</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for msg in messages %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-        <form action="#" method="post">
-            {% for field in form %}
-                {{field(placeholder=field.label.text)}}
-                <br>
-            {% endfor %}
-        </form>
-    </div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="register form">
+  <span class="title">Registration</span>
+  <form action="#" method="post">
+    {% for field in form %}
+      {% if field.label.text != "CSRF Token" and field.label.text != "Register" %}
+        <div class="input-box">
+          <span class="details">{{field.label.text}}</span>
+          {{field(placeholder=field.label.text)}}
+        </div>
+      {% elif field.label.text == "Register" %}
+        <div class="button">
+          {{field(value=field.label.text)}}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </form>
+</div>
+
 {% endblock %}

@@ -1,15 +1,29 @@
 {% extends "base.html" %}
 {% block title %}login{% endblock %}
 {% block main %}
-     
-    <div class="register form">
-        <h1>Log in to your account!</h1>
-        <form action="#" method="post">
-            {% for field in form %}
-                {{field(placeholder=field.label.text)}}
-                <br>
-            {% endfor %}
-        </form>
-    </div>
-    
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for msg in messages %}
+      <p>{{msg}}</p>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="login form">
+  <span class="title">Login</span>
+  <form action="#" method="post">
+    {% for field in form %}
+      {% if field.label.text != "CSRF Token" and field.label.text != "Log In" %}
+        <div class="input-box">
+          <span class="details">{{field.label.text}}</span>
+          {{field(placeholder=field.label.text)}}
+        </div>
+      {% elif field.label.text == "Log In" %}
+        <div class="button">
+          {{field(value=field.label.text)}}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </form>
+</div>
 {% endblock %}

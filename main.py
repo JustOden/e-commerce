@@ -44,12 +44,12 @@ def allowed_file(filename):
            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-class SignupForm(FlaskForm):
+class RegisterForm(FlaskForm):
     name = StringField("Name", validators=[InputRequired()])
     email = EmailField("Email", validators=[InputRequired()])
     password = PasswordField("Password", validators=[InputRequired()])
-    confirm = PasswordField("Confirm", validators=[InputRequired()])
-    submit = SubmitField("Create")
+    confirm = PasswordField("Confirm Password", validators=[InputRequired()])
+    submit = SubmitField("Register")
 
 
 class EditUserForm(FlaskForm):
@@ -65,7 +65,7 @@ class EditUserForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[InputRequired()])
     password = PasswordField("Password", validators=[InputRequired()])
-    submit = SubmitField("Login")
+    submit = SubmitField("Log In")
 
 
 class AddItemForm(FlaskForm):
@@ -184,7 +184,7 @@ def home():
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
-    form = SignupForm()
+    form = RegisterForm()
     if form.validate_on_submit():
         name = form.name.data
         email = form.email.data
