@@ -430,6 +430,19 @@ def delete_item():
     return render_template("delete_item.html", form=form)
 
 
+@app.route("/cash-out")
+def cash_out():
+  if current_user.is_authenticated:
+      cart_items = process_cart()
+      for cart in cart_items:
+          cart.item.in_stock -= cart.amount_to_buy
+      db.session.commit()
+  else:
+      if "anon_cart" in session:
+          pass
+  return redirect(url_for("cart"))
+
+
 @app.route("/set-admin")
 def set_admin():
     if current_user.is_authenticated:

@@ -22,6 +22,8 @@
         <div class="button">
           {{field(value=field.label.text)}}
         </div>
+      {% else %}
+        {{field()}}
       {% endif %}
     {% endfor %}
   </form>
