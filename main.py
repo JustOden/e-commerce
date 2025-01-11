@@ -38,7 +38,6 @@ def load_user(user_id):
     return db.session.get(Users, user_id)
 
 
-# testing commits
 def allowed_file(filename):
     return "." in filename and \
            filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -166,9 +165,10 @@ def process_cart():
 
 @app.route("/")
 @app.route("/home", methods=["POST", "GET"])
-def home():
+def index():
     search = request.form.get("search")
     all_items = db.session.query(Items).all()
+    session["cached_item"] = [(item.name, item.description) for item in all_items]
     data_list = all_items
     if search:
         all_items = [
@@ -179,7 +179,7 @@ def home():
     cart_items = process_cart()
     if "anon_cart" in session:
         cart_items = {item.id: atb for item, atb in cart_items}
-    return render_template("home.html", all_items=all_items, cart_items=cart_items, data_list=data_list)
+    return render_template("index.html", all_items=all_items, cart_items=cart_items)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -203,7 +203,7 @@ def register():
             else:
                 flash("Password does not match. Please retry.")
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
     return render_template("register.html", form=form)
 
 
@@ -223,7 +223,7 @@ def login():
             if "total" in session:
                 session.pop("total", None)
             flash("Login successful!")
-            return redirect(url_for("home"))
+            return redirect(url_for("index"))
         else:
             flash("Password or Email is incorrect")
     if current_user.is_authenticated:
@@ -302,6 +302,28 @@ def cart():
     else:
         cart_ids = {}
     return render_template("cart.html", cart_items=cart_items, cart_ids=cart_ids)
+
+
+@app.route("/cash-out")
+def cash_out():
+  if current_user.is_authenticated:
+      cart_items = process_cart()
+      for cart in cart_items:
+          cart.item.in_stock -= cart.amount_to_buy
+          flash(f"you have bought {cart.amount_to_buy} {cart.item.name} for ${cart.item.price*cart.amount_to_buy}")
+          db.session.delete(cart)
+      db.session.commit()
+      flash(f"you have spent ${session.get('total')} dollars in total")
+  else:
+      if "anon_cart" in session:
+          cart_items = process_cart()
+          for item, atb in cart_items.copy():
+              item.in_stock -= atb
+              flash(f"you have bought {atb} {item.name} for ${item.price*atb}")
+              session["anon_cart"].pop(str(item.id), None)
+          db.session.commit()
+          flash(f"you have spent ${session.get('total')} dollars")
+  return redirect(url_for("cart"))
 
 
 @app.route("/process", methods=["POST"])
@@ -430,19 +452,6 @@ def delete_item():
     return render_template("delete_item.html", form=form)
 
 
-@app.route("/cash-out")
-def cash_out():
-  if current_user.is_authenticated:
-      cart_items = process_cart()
-      for cart in cart_items:
-          cart.item.in_stock -= cart.amount_to_buy
-      db.session.commit()
-  else:
-      if "anon_cart" in session:
-          pass
-  return redirect(url_for("cart"))
-
-
 @app.route("/set-admin")
 def set_admin():
     if current_user.is_authenticated:
@@ -466,7 +475,7 @@ def view_users():
     if current_user.is_authenticated and current_user.is_admin:
         return render_template("view_users.html", values=db.session.query(Users).all())
     else:
-        return redirect(url_for("home"))
+        return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
