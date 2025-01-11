@@ -1,6 +1,6 @@
 Run the Python3 file `main.py` to view the website.
 
-• it is hosted locally on the machine.
+•it is hosted locally on the machine.
 
 ・uses the production level sqlite database which is stored locally in the instance folder; this folder is ignored with .gitignore.
 
