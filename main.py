@@ -412,7 +412,7 @@ def update_item():
                 item.price = price
                 flash("Successfully updated price of item")
             if in_stock:
-                item.in_stock = in_stock
+                item.in_stock += in_stock
                 flash("Successfully updated amount of items in stock")
             if description and len(description) <= 255:
                 item.description = description

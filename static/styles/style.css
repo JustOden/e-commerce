@@ -148,27 +148,12 @@ ul {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* background: linear-gradient(135deg, #71b7e6, #9b59b6); */
 }
 
 .form .title {
     font-size: large;
     font-weight: bold;
 }
-
-.form .title::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 30px;
-    background: linear-gradient(135deg, #71b7e6, #9b59b6);
-}
-
-/* .form .details {
-    margin: 10%;
-} */
 
 .form .image {
     border: 1px solid;
