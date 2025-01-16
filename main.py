@@ -90,12 +90,17 @@ class DeleteItemForm(FlaskForm):
     submit = SubmitField("Delete Item")
 
 
+class Admins(db.Model):
+    __tablename__ = "admin"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
 class Users(db.Model, UserMixin):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    is_admin = db.Column(db.Boolean, nullable=False)
     password_hash = db.Column(db.String(162), nullable=False)
     image_path = db.Column(db.String(150), unique=True)
     image_name = db.Column(db.String(20), unique=True)
@@ -109,12 +114,17 @@ class Users(db.Model, UserMixin):
     def change_password(self, old_pw: str, new_pw: str) -> None:
         if self.check_password(old_pw):
             self.set_password(new_pw)
+            
+    def is_admin(self) -> Admins | None:
+        return db.session.query(Admins).filter_by(user_id=self.id).first()
 
     def set_admin(self) -> None:
-        self.is_admin = True
+        new_admin = Admins(user_id=self.id)
+        db.session.add(new_admin)
 
     def remove_admin(self) -> None:
-        self.is_admin = False
+        if client:=self.is_admin():
+            db.session.delete(client)
 
 
 class Items(db.Model):
@@ -129,11 +139,9 @@ class Items(db.Model):
 
     def increment_by(self, amount: int) -> None:
         self.in_stock+=amount
-        db.session.commit()
 
     def decrement_by(self, amount: int) -> None:
         self.in_stock-=amount
-        db.session.commit()
 
 
 class Cart(db.Model):
@@ -169,7 +177,6 @@ def index():
     search = request.form.get("search")
     all_items = db.session.query(Items).all()
     session["cached_item"] = [(item.name, item.description) for item in all_items]
-    data_list = all_items
     if search:
         all_items = [
             item for item in all_items
@@ -194,7 +201,7 @@ def register():
             flash("User already exists!")
         else:
             if password == confirm:
-                client = Users(name=name, email=email, is_admin=False)
+                client = Users(name=name, email=email)
                 client.set_password(password)
                 db.session.add(client)
                 db.session.commit()
@@ -309,7 +316,7 @@ def cash_out():
   if current_user.is_authenticated:
       cart_items = process_cart()
       for cart in cart_items:
-          cart.item.in_stock -= cart.amount_to_buy
+          cart.item.decrement_by(cart.amount_to_buy)
           flash(f"you have bought {cart.amount_to_buy} {cart.item.name} for ${cart.item.price*cart.amount_to_buy}")
           db.session.delete(cart)
       db.session.commit()
@@ -318,7 +325,7 @@ def cash_out():
       if "anon_cart" in session:
           cart_items = process_cart()
           for item, atb in cart_items.copy():
-              item.in_stock -= atb
+              item.decrement_by(atb)
               flash(f"you have bought {atb} {item.name} for ${item.price*atb}")
               session["anon_cart"].pop(str(item.id), None)
           db.session.commit()
@@ -412,7 +419,7 @@ def update_item():
                 item.price = price
                 flash("Successfully updated price of item")
             if in_stock:
-                item.in_stock += in_stock
+                item.increment_by(in_stock)
                 flash("Successfully updated amount of items in stock")
             if description and len(description) <= 255:
                 item.description = description
@@ -472,7 +479,7 @@ def remove_admin():
 
 @app.route("/view-users")
 def view_users():
-    if current_user.is_authenticated and current_user.is_admin:
+    if current_user.is_authenticated and current_user.is_admin():
         return render_template("view_users.html", values=db.session.query(Users).all())
     else:
         return redirect(url_for("index"))
