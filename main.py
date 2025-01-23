@@ -8,16 +8,21 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, EmailField, FloatField, IntegerField, TextAreaField, FileField
 from wtforms.validators import InputRequired, InputRequired, Optional
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from dotenv import load_dotenv
 
-ITEMS_UPLOAD_PATH = "static/assets/items"
-USERS_UPLOAD_PATH = "static/assets/users"
+load_dotenv()
+
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
+SQLITE3_CONNECTION = "sqlite:///e-commerce.sqlite3"
+DBPASSWORD = os.environ.get('DBPASSWORD')
+MYSQL_CONNECTION = f"mysql+pymysql://root:{DBPASSWORD}@localhost/ecommerce"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 app = Flask(__name__)
-app.config["ITEMS_UPLOAD_PATH"] = ITEMS_UPLOAD_PATH
-app.config["USERS_UPLOAD_PATH"] = USERS_UPLOAD_PATH
-app.secret_key = "1234"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///e-commerce.sqlite3"
+app.config["ITEMS_UPLOAD_PATH"] = "static/assets/items"
+app.config["USERS_UPLOAD_PATH"] = "static/assets/users"
+app.secret_key = SECRET_KEY if SECRET_KEY else "notsecurepassword"
+app.config["SQLALCHEMY_DATABASE_URI"] = MYSQL_CONNECTION if DBPASSWORD else SQLITE3_CONNECTION
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime = timedelta(days=31)
 db = SQLAlchemy(app)
@@ -30,6 +35,7 @@ login_manager.login_view = "login"
 def main():
     with app.app_context():
         db.create_all()
+    print(f" * Running on {SQLITE3_CONNECTION if not DBPASSWORD else 'mysql connection'}")
     app.run(debug=True)
 
 
