@@ -14,7 +14,7 @@ load_dotenv()
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
 SQLITE3_CONNECTION = "sqlite:///e-commerce.sqlite3"
-DBPASSWORD = os.environ.get('DBPASSWORD')
+DBPASSWORD = os.environ.get("DBPASSWORD")
 MYSQL_CONNECTION = f"mysql+pymysql://root:{DBPASSWORD}@localhost/ecommerce"
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
