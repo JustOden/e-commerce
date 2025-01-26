@@ -172,6 +172,16 @@ def process_cart():
                 if (found_item:=db.session.query(Items).filter_by(id=id).first())
             ]
             session["total"] = int(sum([i[0].price*i[1] for i in cart_items]))
+
+        # 1 query version
+        # cart = session["anon_cart"]
+        # items = db.session.query(Items).where(Items.id.in_(cart)).all()
+        # assert len(cart) == len(items)
+        # cart_items = list(zip(items, cart.atb))
+        # if len(cart) != len(items):
+            # missing_ids = cart.keys() - {item.id for item in items}
+            # raise error about IDs in cart missing from the database
+
         else:
             cart_items = {}
     return cart_items

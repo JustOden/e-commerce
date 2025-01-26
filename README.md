@@ -1,4 +1,4 @@
-Run the Python3 file `main.py` to view the website.
+Do the command `flask --debug run` to view the website.
 
 • it is hosted locally on the machine.
 

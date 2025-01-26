@@ -1,3 +1,4 @@
-instance
-static/assets/users/*
+__pycache__/
+instance/
+static/assets/users/
 *.env
