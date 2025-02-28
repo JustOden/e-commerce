@@ -1,13 +1,19 @@
+let cart = {};
+
+
 function addToCart(item_id, anon_cart='{}') {
     let amountToBuy = document.getElementById(item_id).value;
     let itemToAdd = [item_id, amountToBuy];
+
     if (amountToBuy >= 0) {
         let aCart = JSON.parse(anon_cart);
-        if (Object.keys(cart).length === 0 &&
-        aCart.constructor === Object) {
+
+        if (Object.keys(cart).length === 0 && aCart.constructor === Object) {
             cart = aCart;
         }
+
         cart[item_id] = amountToBuy;
+
         $.ajax({
             url: '/process',
             type: 'POST',
@@ -32,6 +38,7 @@ function addToCart(item_id, anon_cart='{}') {
 function searchField(all_items) {
     let dataList = document.getElementById("searchResults");
     let items = JSON.parse(all_items);
+
     for (const item of items) {
         let optionElement = document.createElement("OPTION");
         optionElement.setAttribute("id", item);
@@ -44,7 +51,3 @@ function searchField(all_items) {
 function cartPage() {
     location.replace("/cart");
 }
-
-let cart = {};
-
-
