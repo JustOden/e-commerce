@@ -1,4 +1,4 @@
-Do the command `flask --debug run` to view the website.
+You can do the command `flask run` or `flask --debug run` to view the website.
 
 • it is hosted locally on the machine.
 
